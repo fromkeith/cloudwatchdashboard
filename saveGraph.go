@@ -25,6 +25,7 @@ type SaveGraphRequest struct {
     Metrics             []metricDef
     Time                timeDef
     Id                  string
+    Name                string
 }
 
 type SaveGraphResponse struct {
@@ -39,8 +40,9 @@ func (serv DashboardService) SaveGraph(req SaveGraphRequest, id string) (resp Sa
     resp.Id = id
 
     put := dynamo.NewPutItemRequest()
-    put.TableName = "dashboard.graphs"
+    put.TableName = DYNAMO_GRAPHS_TABLE
     put.Item["GraphId"] = id
+    put.Item["Name"] = req.Name
     // probably want to change this to support times relative to now
     put.Item["Time.Start"] = req.Time.Start
     put.Item["Time.End"] = req.Time.End

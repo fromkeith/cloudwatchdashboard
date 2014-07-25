@@ -11,6 +11,7 @@ import (
 
 const (
     DYNAMO_REGION = "us-west-2"
+    DYNAMO_GRAPHS_TABLE = "dashboard.graphs"
 )
 
 type DashboardService struct {
@@ -19,6 +20,7 @@ type DashboardService struct {
     getMetrics          gorest.EndPoint     `method:"GET" path:"/metric?{search:MetricSearch}" output:"MetricResults"`
     listMetrics         gorest.EndPoint     `method:"GET" path:"/metric/list/?{token:string}" output:"ListMetricsResponse"`
     saveGraph           gorest.EndPoint     `method:"POST" path:"/graph/?{id:string}" postdata:"SaveGraphRequest" output:"SaveGraphResponse"`
+    getSavedGraphs      gorest.EndPoint     `method:"GET" path:"/graphs" output:"GetSavedGraphResponse"`
 }
 
 
