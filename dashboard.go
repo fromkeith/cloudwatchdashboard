@@ -21,6 +21,10 @@ type DashboardService struct {
     listMetrics         gorest.EndPoint     `method:"GET" path:"/metric/list/?{token:string}" output:"ListMetricsResponse"`
     saveGraph           gorest.EndPoint     `method:"POST" path:"/graph/?{id:string}" postdata:"SaveGraphRequest" output:"SaveGraphResponse"`
     getSavedGraphs      gorest.EndPoint     `method:"GET" path:"/graphs" output:"GetSavedGraphResponse"`
+
+    getLogGroups        gorest.EndPoint     `method:"GET" path:"/loggroups?{token:string}" output:"GetLogGroupsResponse"`
+    getLogStreams       gorest.EndPoint     `method:"GET" path:"/loggroup/{name:string}/streams?{token:string}" output:"GetLogGroupStreamsResponse"`
+    getLogs             gorest.EndPoint     `method:"GET" path:"/logs?{search:GetLogsRequest}" output:"GetLogsResponse"`
 }
 
 
