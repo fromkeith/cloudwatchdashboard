@@ -27,7 +27,7 @@ func (serv DashboardService) GetSavedGraphs() (resp GetSavedGraphResponse) {
 
     resp.Graphs = make([]SaveGraphRequest, 0, 100)
 
-    copyResponse(scanResp, &resp)
+    copySavedGraphResponse(scanResp, &resp)
 
     if len(scanResp.LastEvaluatedKey) > 0 {
         lastKey := scanResp.LastEvaluatedKey["GraphId"]
@@ -53,7 +53,7 @@ func (serv DashboardService) GetSavedGraphs() (resp GetSavedGraphResponse) {
                 continue
             }
             if scanResp.LastEvaluatedKey["GraphId"] != lastKey {
-                copyResponse(scanResp, &resp)
+                copySavedGraphResponse(scanResp, &resp)
             }
         }
     }
@@ -61,7 +61,7 @@ func (serv DashboardService) GetSavedGraphs() (resp GetSavedGraphResponse) {
 }
 
 
-func copyResponse(scanResp * dynamo.ScanResponse, resp * GetSavedGraphResponse) {
+func copySavedGraphResponse(scanResp * dynamo.ScanResponse, resp * GetSavedGraphResponse) {
     for i := range scanResp.Items {
         var g SaveGraphRequest
         g.Id = scanResp.Items[i]["GraphId"].(string)

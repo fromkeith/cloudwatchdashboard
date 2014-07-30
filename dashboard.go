@@ -12,6 +12,8 @@ import (
 const (
     DYNAMO_REGION = "us-west-2"
     DYNAMO_GRAPHS_TABLE = "dashboard.graphs"
+    DYNAMO_DASHBOARDS_TABLE = "dashboard.dashboard"
+    DYNAMO_DASHBOARD_GRAPHS_TABLE = "dashboard.dashboard.graphs"
 )
 
 type DashboardService struct {
@@ -21,6 +23,11 @@ type DashboardService struct {
     listMetrics         gorest.EndPoint     `method:"GET" path:"/metric/list/?{token:string}" output:"ListMetricsResponse"`
     saveGraph           gorest.EndPoint     `method:"POST" path:"/graph/?{id:string}" postdata:"SaveGraphRequest" output:"SaveGraphResponse"`
     getSavedGraphs      gorest.EndPoint     `method:"GET" path:"/graphs" output:"GetSavedGraphResponse"`
+
+    saveDashboard       gorest.EndPoint     `method:"POST" path:"/dashboard/{id:string}" postdata:"SaveDashboardRequest" output:"SaveDashboardResponse"`
+    createDashboard     gorest.EndPoint     `method:"PUT" path:"/dashboard" postdata:"PutDashboardRequest" output:"PutDashboardResponse"`
+    getDashboards       gorest.EndPoint     `method:"GET" path:"/dashboards" output:"GetDashboardsResponse"`
+    getDashboard        gorest.EndPoint     `method:"GET" path:"/dashboard/{id:string}" output:"GetDashboardResponse"`
 
     getLogGroups        gorest.EndPoint     `method:"GET" path:"/loggroups?{token:string}" output:"GetLogGroupsResponse"`
     getLogStreams       gorest.EndPoint     `method:"GET" path:"/loggroup/{name:string}/streams?{token:string}" output:"GetLogGroupStreamsResponse"`
