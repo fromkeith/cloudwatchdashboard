@@ -73,6 +73,9 @@ func copySavedGraphResponse(scanResp * dynamo.ScanResponse, resp * GetSavedGraph
         g.Time.Start = int64(scanResp.Items[i]["Time.Start"].(float64))
         g.Time.End = int64(scanResp.Items[i]["Time.End"].(float64))
         g.Time.Period = int(scanResp.Items[i]["Time.Period"].(float64))
+        if v, ok := scanResp.Items[i]["Time.Relative"]; ok {
+            g.Time.Relative = v.(string)
+        }
         g.Name = scanResp.Items[i]["Name"].(string)
         resp.Graphs = append(resp.Graphs, g)
     }

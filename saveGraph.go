@@ -19,6 +19,7 @@ type timeDef struct {
     Start               int64
     End                 int64
     Period              int
+    Relative            string
 }
 
 type SaveGraphRequest struct {
@@ -47,6 +48,9 @@ func (serv DashboardService) SaveGraph(req SaveGraphRequest, id string) (resp Sa
     put.Item["Time.Start"] = req.Time.Start
     put.Item["Time.End"] = req.Time.End
     put.Item["Time.Period"] = req.Time.Period
+    if req.Time.Relative != "" {
+        put.Item["Time.Relative"] = req.Time.Relative
+    }
     // max limit is 64KB.. so for now this will be fine
     b, _ := json.Marshal(req.Metrics)
     put.Item["Metrics"] = string(b)
