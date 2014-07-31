@@ -14,24 +14,27 @@ const (
     DYNAMO_GRAPHS_TABLE = "dashboard.graphs"
     DYNAMO_DASHBOARDS_TABLE = "dashboard.dashboard"
     DYNAMO_DASHBOARD_GRAPHS_TABLE = "dashboard.dashboard.graphs"
+    DYNAMO_LOGIN_TABLE = "dashboard.login"
 )
 
 type DashboardService struct {
-    gorest.RestService          `root:"/r" consumes:"application/json" produces:"application/json"`
+    gorest.RestService          `root:"/r" consumes:"application/json" produces:"application/json" realm:"dashauth"`
 
-    getMetrics          gorest.EndPoint     `method:"GET" path:"/metric?{search:MetricSearch}" output:"MetricResults"`
-    listMetrics         gorest.EndPoint     `method:"GET" path:"/metric/list/?{token:string}" output:"ListMetricsResponse"`
-    saveGraph           gorest.EndPoint     `method:"POST" path:"/graph/?{id:string}" postdata:"SaveGraphRequest" output:"SaveGraphResponse"`
-    getSavedGraphs      gorest.EndPoint     `method:"GET" path:"/graphs" output:"GetSavedGraphResponse"`
+    getMetrics          gorest.EndPoint     `method:"GET" path:"/metric?{search:MetricSearch}" output:"MetricResults" role:"authed"`
+    listMetrics         gorest.EndPoint     `method:"GET" path:"/metric/list/?{token:string}" output:"ListMetricsResponse" role:"authed"`
+    saveGraph           gorest.EndPoint     `method:"POST" path:"/graph/?{id:string}" postdata:"SaveGraphRequest" output:"SaveGraphResponse" role:"authed"`
+    getSavedGraphs      gorest.EndPoint     `method:"GET" path:"/graphs" output:"GetSavedGraphResponse" role:"authed"`
 
-    saveDashboard       gorest.EndPoint     `method:"POST" path:"/dashboard/{id:string}" postdata:"SaveDashboardRequest" output:"SaveDashboardResponse"`
-    createDashboard     gorest.EndPoint     `method:"PUT" path:"/dashboard" postdata:"PutDashboardRequest" output:"PutDashboardResponse"`
-    getDashboards       gorest.EndPoint     `method:"GET" path:"/dashboards" output:"GetDashboardsResponse"`
-    getDashboard        gorest.EndPoint     `method:"GET" path:"/dashboard/{id:string}" output:"GetDashboardResponse"`
+    saveDashboard       gorest.EndPoint     `method:"POST" path:"/dashboard/{id:string}" postdata:"SaveDashboardRequest" output:"SaveDashboardResponse" role:"authed"`
+    createDashboard     gorest.EndPoint     `method:"PUT" path:"/dashboard" postdata:"PutDashboardRequest" output:"PutDashboardResponse" role:"authed"`
+    getDashboards       gorest.EndPoint     `method:"GET" path:"/dashboards" output:"GetDashboardsResponse" role:"authed"`
+    getDashboard        gorest.EndPoint     `method:"GET" path:"/dashboard/{id:string}" output:"GetDashboardResponse" role:"authed"`
 
-    getLogGroups        gorest.EndPoint     `method:"GET" path:"/loggroups?{token:string}" output:"GetLogGroupsResponse"`
-    getLogStreams       gorest.EndPoint     `method:"GET" path:"/loggroup/{name:string}/streams?{token:string}" output:"GetLogGroupStreamsResponse"`
-    getLogs             gorest.EndPoint     `method:"GET" path:"/logs?{search:GetLogsRequest}" output:"GetLogsResponse"`
+    getLogGroups        gorest.EndPoint     `method:"GET" path:"/loggroups?{token:string}" output:"GetLogGroupsResponse" role:"authed"`
+    getLogStreams       gorest.EndPoint     `method:"GET" path:"/loggroup/{name:string}/streams?{token:string}" output:"GetLogGroupStreamsResponse" role:"authed"`
+    getLogs             gorest.EndPoint     `method:"GET" path:"/logs?{search:GetLogsRequest}" output:"GetLogsResponse" role:"authed"`
+
+    login               gorest.EndPoint     `method:"POST" path:"/login" postdata:"LoginRequest" output:"LoginResponse" role:"open"`
 }
 
 
@@ -42,6 +45,7 @@ type config struct {
 func main() {
     conf := loadConfig()
 
+    gorest.RegisterRealmAuthorizer("dashauth", SimpleAuther)
     gorest.RegisterService(new(DashboardService))
     http.Handle("/r/", gorest.Handle())
     http.Handle("/", http.FileServer(http.Dir(conf.Files)))
