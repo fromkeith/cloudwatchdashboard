@@ -11,10 +11,10 @@ import (
 
 const (
     DYNAMO_REGION = "us-west-2"
-    DYNAMO_GRAPHS_TABLE = "dashboard.graphs"
-    DYNAMO_DASHBOARDS_TABLE = "dashboard.dashboard"
-    DYNAMO_DASHBOARD_GRAPHS_TABLE = "dashboard.dashboard.graphs"
-    DYNAMO_LOGIN_TABLE = "dashboard.login"
+    DYNAMO_GRAPHS_TABLE = "dashboard.graphs" // key: GraphId string
+    DYNAMO_DASHBOARDS_TABLE = "dashboard.dashboard" // key: DashboardId string
+    DYNAMO_DASHBOARD_GRAPHS_TABLE = "dashboard.dashboard.graphs" // key: DashboardId string, GraphId string
+    DYNAMO_LOGIN_TABLE = "dashboard.login" // key: Uusername string
 )
 
 type DashboardService struct {
